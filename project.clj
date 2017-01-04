@@ -1,8 +1,8 @@
-(defproject kuromoji-front-end "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
-  :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
+(defproject kuromoji-jmdictfurigana "0.1.0-SNAPSHOT"
+  :description "Kuromoji is great. JmdictFurigana is great. Wouldn’t it be great if they got together?"
+  :url "https://github.com/fasiha/clj-kuromoji-jmdictfurigana"
+  :license {:name "Unlicense"
+            :url "http://unlicense.org/"}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [compojure "1.4.0"]
                  [ring "1.4.0"]
@@ -17,9 +17,9 @@
                  ]
   :plugins [[lein-ring "0.10.0"]
             [lein-expand-resource-paths "0.0.1"]]
-  :ring {:handler kuromoji-front-end.handler/app
+  :ring {:handler kuromoji-jmdictfurigana.handler/app
          :port 3600}
   :resource-paths ["resources/jars-cc64f5fdda8/*"]
-  :main ^:skip-aot kuromoji-front-end.core
+  :main ^:skip-aot kuromoji-jmdictfurigana.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

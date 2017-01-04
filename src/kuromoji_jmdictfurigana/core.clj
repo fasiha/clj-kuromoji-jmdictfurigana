@@ -1,7 +1,7 @@
-(ns kuromoji-front-end.core
+(ns kuromoji-jmdictfurigana.core
   (:require [clojure.string :as string]
             [clojure.pprint :refer [pprint]]
-            [kuromoji-front-end.kuromoji :as kuromoji])
+            [kuromoji-jmdictfurigana.kuromoji :as kuromoji])
   ; (:import [com.atilika.kuromoji.unidic Token Tokenizer])
   (:gen-class))
 

@@ -1,4 +1,4 @@
-(ns kuromoji-front-end.kuromoji
+(ns kuromoji-jmdictfurigana.kuromoji
   (:require [clojure.string :as string])
   (:import [com.atilika.kuromoji.unidic Token Tokenizer]))
 
