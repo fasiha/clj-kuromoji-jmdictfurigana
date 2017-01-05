@@ -1,20 +1,32 @@
-# Use [Kuromoji](https://github.com/atilika/kuromoji) 1.0 and UniDic from JVM Clojure
+# Kuromoji 💛 JmdictFurigana
 
-This repo builds on the Kuromoji 1.0 branch of my [`demo-clojure-kuromoji`](https://github.com/fasiha/demo-clojure-kuromoji/tree/kuromoji-1.0) repo. It contains a JAR containing a snapshot of Kuromoji 1.0, which it makes available as a web microservice, using the powerful UniDic dictionary.
+A REST-ful interface to [**Atilika Kuromoji**](http://www.atilika.org/)+UniDic, augmented by the [**JmdictFurigana**](https://github.com/Doublevil/JmdictFurigana/) data set.
 
-## Install
-Follow instructions for lein at http://leiningen.org/#install.
+This repo contains pre-compiled JARs for Kuromoji with the powerful UniDic dictionary, and is ready to run as-is. (If you want stand-alone microservices for either of these, check out [clj-kuromoji-front-end](https://github.com/fasiha/clj-kuromoji-front-end) and [JmdictFurigana-microservice](https://github.com/fasiha/JmdictFurigana-microservice).)
 
-A simple demo is available: clone this repo, `cd` into it, and run `lein run` to see the best and the top-3 tokenizations of “何できた？”. Read `src/kuromoji_front_end/core.clj` to see how straightforward the API is.
+## Installation and operation
+First, [install lein](http://leiningen.org/#install).
 
-## Run microservice
-Clone this repo, `cd` into it, then:
+Then, clone this repo, `cd` into it, and start the webserver on port 3600 (change by editing `project.clj`, specifically, `{:ring {:port 3600}}`):
 ```
+$ git clone https://github.com/fasiha/clj-kuromoji-jmdictfurigana.git
+$ cd clj-kuromoji-jmdictfurigana
 $ lein trampoline ring server-headless
 ```
-This starts the webserver on port 3600 (change by editing `project.clj`, specifically, `{:ring {:port 3600}}`).
 
-Test, asking for HTML output:
+Two GET endpoints are made available: `/parse/<Japanese goes here>` and `/parse-nbest/<Japanese goes here>`, i.e.,:
+
+- [http://localhost:3600/parse/何できた？](http://localhost:3600/parse/何できた？) returns the best tokenization for the string `何できた？`.
+- [http://localhost:3600/parse-nbest/何できた？](http://localhost:3600/parse/何できた？) returns the *ten* best tokenizations (new in Kuromoji 1.0).
+
+The server can return the following MIME types:
+
+- `text/html`: nice for testing with your browser,
+- `application/json`: for your AJAX calls,
+- `application/transit+json`: [Transit](https://github.com/cognitect/transit-format) for your Clojure/ClojureScript apps.
+
+## Examples
+Asking for HTML output:
 ```
 $ curl -v -H "Accept: text/html" http://localhost:3600/parse/何できた？
 > GET /parse/何できた？ HTTP/1.1
@@ -23,9 +35,9 @@ $ curl -v -H "Accept: text/html" http://localhost:3600/parse/何できた？
 > Accept: text/html
 >
 < HTTP/1.1 200 OK
-< Date: Tue, 03 Jan 2017 03:19:23 GMT
+< Date: Thu, 05 Jan 2017 06:43:08 GMT
 < Content-Type: text/html; charset=UTF-8
-< Content-Length: 3045
+< Content-Length: 3136
 < Server: Jetty(9.2.10.v20150310)
 <
 <html>
@@ -49,6 +61,8 @@ $ curl -v -H "Accept: text/html" http://localhost:3600/parse/何できた？
   initial-sound-alternation-type: "*"
   all-features: [代名詞, "*", "*", "*", "*", "*", ナニ, 何, 何, ナン, 何, ナン, 和, "*", "*", "*",
     "*"]
+  furigana:
+  - {ruby: 何, rt: なに}
   position: 0
   literal-pronunciation: ナン
 - language-type: 和
@@ -69,6 +83,7 @@ $ curl -v -H "Accept: text/html" http://localhost:3600/parse/何できた？
   initial-sound-alternation-type: "*"
   all-features: [動詞, 非自立可能, "*", "*", 上一段-カ行, 連用形-一般, デキル, 出来る, でき, デキ, できる, デキル,
     和, "*", "*", "*", "*"]
+  furigana: null
   position: 1
   literal-pronunciation: デキ
 - language-type: 和
@@ -89,6 +104,7 @@ $ curl -v -H "Accept: text/html" http://localhost:3600/parse/何できた？
   initial-sound-alternation-type: "*"
   all-features: [助動詞, "*", "*", "*", 助動詞-タ, 終止形-一般, タ, た, た, タ, た, タ, 和, "*", "*",
     "*", "*"]
+  furigana: null
   position: 3
   literal-pronunciation: タ
 - language-type: 記号
@@ -109,31 +125,31 @@ $ curl -v -H "Accept: text/html" http://localhost:3600/parse/何できた？
   initial-sound-alternation-type: "*"
   all-features: [補助記号, 句点, "*", "*", "*", "*", "", ？, ？, "", ？, "", 記号, "*", "*",
     "*", "*"]
+  furigana: null
   position: 4
   literal-pronunciation: ""
 </pre></div></body></html>
 ```
-Here we explicitly asked for HTML, via the `Accept` header. The webserver can also return JSON (`Accept: application/json`) and [Transit](https://github.com/cognitect/transit-format) (`Accept: application/transit+json`), for Clojure/ClojureScript and related consumers.
 
-Note that the Japanese feature names have been replaced by the English translations:
+Note that, for morpheme literals containing kanji, the `furigana` slot is automatically populated with the morpheme’s lemma’s JmdictFurigana results.
+
+Note that the Japanese feature names from the UniDic dictionary have been replaced by the English translations: we follow the following resources, from the BCCWJ authors:
 
 - [part-of-speech features](https://gist.github.com/masayu-a/e3eee0637c07d4019ec9)
 - [inflection features](https://gist.github.com/masayu-a/3e11168f9330e2d83a68)
 - [inflection type features](https://gist.github.com/masayu-a/b3ce862336e47736e84f)
 
-An awesome feature of Kuromoji 1.0 is N-best tokenizations. This is made available at the `/parse-nbest/` endpoint (i.e., `http://localhost:3600/parse-nbest/何できた？`), and returns the top ten results as an array/vector.
-
 ## Abbreviated tokenization
-Here’s a subset of the tokenized data for easier digestion, of Kuromoji/UniDic’s tokenization of 「お寿司が食べたい。」.
+Here’s a subset of the tokenized data for easier digestion, of Kuromoji/UniDic’s tokenization of 「お寿司が食べたい。」, including the lemma’s furigana, if applicable, via the JmdictFurigana database.
 
-| literal   | lemma    | part of speech                    | conjugation                | conjugation type                       |
-|---|---|---|---|---|
-| お        | 御       | [:prefix]                         | [:uninflected]             | []                                     |
-| 寿司      | 寿司     | [:noun :common :general]          | [:uninflected]             | []                                     |
-| が        | が       | [:particle :case]                 | [:uninflected]             | []                                     |
-| 食べ      | 食べる   | [:verb :general]                  | [:continuative :general]   | [:shimoichidan-verb-e-row :ba-column]  |
-| たい      | たい     | [:auxiliary-verb]                 | [:conclusive :general]     | [:auxiliary :tai]                      |
-| 。        | 。       | [:supplementary-symbol :period]   | [:uninflected]             | []                                     |
+| literal | lemma | part of speech | conjugation | conjugation type | furigana |
+|---|---|---|---|---|---|
+| お | 御 | prefix | uninflected |  |  |
+| 寿司 | 寿司 | noun,common,general | uninflected |  | [{"ruby":"寿","rt":"す"},{"ruby":"司","rt":"し"}] |
+| が | が | particle,case | uninflected |  |  |
+| 食べ | 食べる | verb,general | continuative,general | shimoichidan-verb-e-row,ba-column | [{"ruby":"食","rt":"た"},"べる"] |
+| たい | たい | auxiliary-verb | conclusive,general | auxiliary,tai |  |
+| 。 | 。 | supplementary-symbol,period | uninflected |  |  |
 
 ## Notes on building Kuromoji 1.0-SNAPSHOT
 The JARs included in this repo may be outdated—I am using `cc64f5fdda8` (Nov 16, 2016), and you can check the latest log at [Atilika Kuromoji log](https://github.com/atilika/kuromoji/commits/master).

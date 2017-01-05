@@ -12,20 +12,13 @@
    "/parse-nbest/:text"
    [text]
    (do (println "Parsing text (n-best):" text)
-     {:body (kuromoji/parse-nbest text 10)}))
+     {:body (kuromoji/parse-nbest-with-furigana text 10)}))
 
   (GET
    "/parse/:text"
    [text]
    (do (println "Parsing text:" text)
-     {:body (kuromoji/parse text)}))
-
-  (GET
-   "/parse-furigana/:text"
-   [text]
-   (do (println "Parsing text (furigana):" text)
      {:body (kuromoji/parse-with-furigana text)}))
-
 
   (route/not-found "Not found."))
 

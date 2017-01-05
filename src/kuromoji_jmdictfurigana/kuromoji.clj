@@ -225,26 +225,32 @@
    :all-features (string/split (.getAllFeatures token) #",")
    })
 
+(def re-han #"\p{IsHan}")
+
 (defn append-furigana [token-map]
     (merge token-map
            {:furigana
-            (furigana/kanji-reading->furigana
-             (:lemma token-map)
-             (kana/katakana->hiragana (:lemma-reading token-map)))}))
+            (if (re-find re-han (:literal token-map))
+              (furigana/kanji-reading->furigana
+               (:lemma token-map)
+               (kana/katakana->hiragana (:lemma-reading token-map)))
+              nil)}))
 
 (def unidic-tokenizer (Tokenizer.))
+
+(defn parse
+  [s]
+  (mapv token-to-map
+        (.tokenize unidic-tokenizer s)))
+(defn parse-with-furigana
+  [s]
+  (mapv append-furigana (parse s)))
 
 (defn parse-nbest
   [s n]
   (mapv #(mapv token-to-map
                %)
         (.multiTokenize unidic-tokenizer s n 1000000)))
-
-(defn parse
-  [s]
-  (mapv token-to-map
-        (.tokenize unidic-tokenizer s)))
-
-(defn parse-with-furigana
-  [s]
-  (mapv append-furigana (parse s)))
+(defn parse-nbest-with-furigana
+  [s n]
+  (mapv append-furigana (parse-nbest s n)))
