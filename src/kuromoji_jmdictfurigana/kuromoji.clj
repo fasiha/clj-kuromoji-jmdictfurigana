@@ -251,6 +251,9 @@
   (mapv #(mapv token-to-map
                %)
         (.multiTokenize unidic-tokenizer s n 1000000)))
+
 (defn parse-nbest-with-furigana
   [s n]
-  (mapv append-furigana (parse-nbest s n)))
+  (mapv #(mapv (comp append-furigana token-to-map)
+               %)
+        (.multiTokenize unidic-tokenizer s n 1000000)))

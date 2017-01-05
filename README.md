@@ -17,7 +17,7 @@ $ lein trampoline ring server-headless
 Two GET endpoints are made available: `/parse/<Japanese goes here>` and `/parse-nbest/<Japanese goes here>`, i.e.,:
 
 - [http://localhost:3600/parse/何できた？](http://localhost:3600/parse/何できた？) returns the best tokenization for the string `何できた？`.
-- [http://localhost:3600/parse-nbest/何できた？](http://localhost:3600/parse/何できた？) returns the *ten* best tokenizations (new in Kuromoji 1.0).
+- [http://localhost:3600/parse-nbest/何できた？](http://localhost:3600/parse-nbest/何できた？) returns the *ten* best tokenizations (new in Kuromoji 1.0).
 
 The server can return the following MIME types:
 
