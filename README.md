@@ -131,26 +131,25 @@ $ curl -v -H "Accept: text/html" http://localhost:3600/parse/何できた？
 </pre></div></body></html>
 ```
 
-Note that, for morpheme literals containing kanji, the `furigana` slot is automatically populated with the morpheme’s lemma’s JmdictFurigana results.
+Note that, for morpheme literals containing kanji, the `furigana` slot is automatically populated with the morpheme’s literal’s JmdictFurigana results. This is slightly incorrect at times, as you can see here: 何 here is abbreviated to なん, as shows by the `literal-pronunciation` of the first morpheme, but the `furigana` gives the full なに. Help on this is much appreciated!
 
-Note that the Japanese feature names from the UniDic dictionary have been replaced by the English translations: we follow the following resources, from the BCCWJ authors:
+Also note that the Japanese feature names from the UniDic dictionary have been replaced by the English translations: we follow the following resources, from the BCCWJ authors:
 
 - [part-of-speech features](https://gist.github.com/masayu-a/e3eee0637c07d4019ec9)
 - [inflection features](https://gist.github.com/masayu-a/3e11168f9330e2d83a68)
 - [inflection type features](https://gist.github.com/masayu-a/b3ce862336e47736e84f)
 
 ## Abbreviated tokenization
-Here’s a subset of the tokenized data for easier digestion, of Kuromoji/UniDic’s tokenization of 「お寿司が食べたい。」, including the lemma’s furigana, if applicable, via the JmdictFurigana database.
+Here’s a subset of the tokenized data for easier digestion, of Kuromoji/UniDic’s tokenization of 「お寿司が食べたい。」, including the literal’s furigana, if applicable, via the JmdictFurigana database.
 
 | literal | lemma | part of speech | conjugation | conjugation type | furigana |
 |---|---|---|---|---|---|
 | お | 御 | prefix | uninflected |  |  |
-| 寿司 | 寿司 | noun common general | uninflected |  | [{"ruby":"寿","rt":"す"},{"ruby":"司","rt":"し"}] |
-| が | が | particle case | uninflected |  |  |
-| 食べ | 食べる | verb general | continuative general | shimoichidan-verb-e-row ba-column | [{"ruby":"食","rt":"た"},"べる"] |
-| たい | たい | auxiliary-verb | conclusive general | auxiliary tai |  |
-| 。 | 。 | supplementary-symbol period | uninflected |  |  |
-
+| 寿司 | 寿司 | noun/common/general | uninflected |  | [{"ruby":"寿", "rt":"す"}, {"ruby":"司", "rt":"し"}] |
+| が | が | particle/case | uninflected |  |  |
+| 食べ | 食べる | verb/general | continuative/general | shimoichidan-verb-e-row/ba-column | [{"ruby":"食"," rt":"た"},"べ"] |
+| たい | たい | auxiliary-verb | conclusive/general | auxiliary/tai |  |
+| 。 | 。 | supplementary-symbol/period | uninflected |  |  |
 ## Notes on building Kuromoji 1.0-SNAPSHOT
 The JARs included in this repo may be outdated—I am using `cc64f5fdda8` (Nov 16, 2016), and you can check the latest log at [Atilika Kuromoji log](https://github.com/atilika/kuromoji/commits/master).
 
