@@ -227,13 +227,41 @@
 
 (def re-han #"\p{IsHan}")
 
+(defn make-furigana-vec
+  "Given an `original-raw` string and a vector of furigana maps `{:kanji \"…\"
+  :reading \"…\"}` in `jmdict-furigana-vec`, returns a vector of furigana maps
+  that tries to match as much of the furigana vector with the string as
+  possible. When the two diverge, returns whatever prefixed matches were found,
+  plus the rest of the original string. If we run out of furigana and some
+  string remains, append that."
+  [original-raw jmdict-furigana-vec]
+  (loop [shrinking-vec jmdict-furigana-vec
+         shrinking-str original-raw
+         growing-vec []]
+    (if (empty? shrinking-vec) ; all done?
+      (if (empty? shrinking-str)
+        growing-vec ; return
+        (conj growing-vec shrinking-str)) ; return
+      (let [first-furi (first shrinking-vec)
+            first-val (or (:ruby first-furi) first-furi)
+            n (count first-val)]
+        (if (string/starts-with? shrinking-str first-val)
+          (recur (rest shrinking-vec)
+            (subs shrinking-str n)
+            (conj growing-vec first-furi))
+          ; diverged. Unless something matched earlier, return nil
+          (if-not (empty? growing-vec)
+            (conj growing-vec shrinking-str)))))))
+
 (defn append-furigana [token-map]
     (merge token-map
            {:furigana
             (if (re-find re-han (:literal token-map))
-              (furigana/kanji-reading->furigana
-               (:lemma token-map)
-               (kana/katakana->hiragana (:lemma-reading token-map)))
+              (make-furigana-vec
+               (:literal token-map)
+               (furigana/kanji-reading->furigana
+                (:lemma token-map)
+                (kana/katakana->hiragana (:lemma-reading token-map))))
               nil)}))
 
 (def unidic-tokenizer (Tokenizer.))
