@@ -9,17 +9,25 @@
 
 (defroutes handler
   (GET
-    "/parse-nbest/:text"
-    [text]
-    (do (println "Parsing text:" text)
-        {:body (kuromoji/parse-nbest text 10)}))
+   "/parse-nbest/:text"
+   [text]
+   (do (println "Parsing text (n-best):" text)
+     {:body (kuromoji/parse-nbest text 10)}))
+
   (GET
-    "/parse/:text"
-    [text]
-    (do (println "Parsing text:" text)
-        {:body (kuromoji/parse text)}))
-  (route/not-found "Not found.")
-  )
+   "/parse/:text"
+   [text]
+   (do (println "Parsing text:" text)
+     {:body (kuromoji/parse text)}))
+
+  (GET
+   "/parse-furigana/:text"
+   [text]
+   (do (println "Parsing text (furigana):" text)
+     {:body (kuromoji/parse-with-furigana text)}))
+
+
+  (route/not-found "Not found."))
 
 (def app (-> #'handler
              (wrap-cors :access-control-allow-origin [#".*"]

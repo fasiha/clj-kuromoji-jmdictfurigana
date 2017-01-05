@@ -1,5 +1,7 @@
 (ns kuromoji-jmdictfurigana.kuromoji
-  (:require [clojure.string :as string])
+  (:require [clojure.string :as string]
+            [kuromoji-jmdictfurigana.furigana :as furigana]
+            [kuromoji-jmdictfurigana.kana :as kana])
   (:import [com.atilika.kuromoji.unidic Token Tokenizer]))
 
 ; see https://gist.github.com/masayu-a/e3eee0637c07d4019ec9
@@ -223,6 +225,13 @@
    :all-features (string/split (.getAllFeatures token) #",")
    })
 
+(defn append-furigana [token-map]
+  (if-let [furi (furigana/kanji-reading->furigana
+                 (:lemma token-map)
+                 (kana/katakana->hiragana (:lemma-reading token-map)))]
+    (merge token-map {:furigana furi})
+    token-map))
+
 (def unidic-tokenizer (Tokenizer.))
 
 (defn parse-nbest
@@ -235,3 +244,7 @@
   [s]
   (mapv token-to-map
         (.tokenize unidic-tokenizer s)))
+
+(defn parse-with-furigana
+  [s]
+  (mapv append-furigana (parse s)))

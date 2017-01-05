@@ -1,8 +1,8 @@
 (ns kuromoji-jmdictfurigana.core
   (:require [clojure.string :as string]
             [clojure.pprint :refer [pprint]]
-            [kuromoji-jmdictfurigana.kuromoji :as kuromoji])
-  ; (:import [com.atilika.kuromoji.unidic Token Tokenizer])
+            [kuromoji-jmdictfurigana.kuromoji :as kuromoji]
+            [kuromoji-jmdictfurigana.furigana :as furigana])
   (:gen-class))
 
 (defn to-sorted [token-map]
