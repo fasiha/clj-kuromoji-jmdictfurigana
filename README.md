@@ -145,11 +145,11 @@ Here’s a subset of the tokenized data for easier digestion, of Kuromoji/UniDic
 | literal | lemma | part of speech | conjugation | conjugation type | furigana |
 |---|---|---|---|---|---|
 | お | 御 | prefix | uninflected |  |  |
-| 寿司 | 寿司 | noun,common,general | uninflected |  | [{"ruby":"寿","rt":"す"},{"ruby":"司","rt":"し"}] |
-| が | が | particle,case | uninflected |  |  |
-| 食べ | 食べる | verb,general | continuative,general | shimoichidan-verb-e-row,ba-column | [{"ruby":"食","rt":"た"},"べる"] |
-| たい | たい | auxiliary-verb | conclusive,general | auxiliary,tai |  |
-| 。 | 。 | supplementary-symbol,period | uninflected |  |  |
+| 寿司 | 寿司 | noun common general | uninflected |  | [{"ruby":"寿","rt":"す"},{"ruby":"司","rt":"し"}] |
+| が | が | particle case | uninflected |  |  |
+| 食べ | 食べる | verb general | continuative general | shimoichidan-verb-e-row ba-column | [{"ruby":"食","rt":"た"},"べる"] |
+| たい | たい | auxiliary-verb | conclusive general | auxiliary tai |  |
+| 。 | 。 | supplementary-symbol period | uninflected |  |  |
 
 ## Notes on building Kuromoji 1.0-SNAPSHOT
 The JARs included in this repo may be outdated—I am using `cc64f5fdda8` (Nov 16, 2016), and you can check the latest log at [Atilika Kuromoji log](https://github.com/atilika/kuromoji/commits/master).
