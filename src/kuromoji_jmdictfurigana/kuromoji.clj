@@ -226,11 +226,11 @@
    })
 
 (defn append-furigana [token-map]
-  (if-let [furi (furigana/kanji-reading->furigana
-                 (:lemma token-map)
-                 (kana/katakana->hiragana (:lemma-reading token-map)))]
-    (merge token-map {:furigana furi})
-    token-map))
+    (merge token-map
+           {:furigana
+            (furigana/kanji-reading->furigana
+             (:lemma token-map)
+             (kana/katakana->hiragana (:lemma-reading token-map)))}))
 
 (def unidic-tokenizer (Tokenizer.))
 
